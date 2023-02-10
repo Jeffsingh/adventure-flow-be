@@ -28,7 +28,13 @@ module.exports = {
       },
       role: {
         type: DataTypes.INTEGER,
-        allowNull:false
+        references: {
+          model: {
+            tableName: 'roles'
+          },
+          key: 'id'
+        },
+        allowNull: false
       },
       createdAt: {
         allowNull: false,

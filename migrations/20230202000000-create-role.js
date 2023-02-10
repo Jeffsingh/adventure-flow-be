@@ -23,7 +23,7 @@ module.exports = {
         type: DataTypes.DATE
       }
     });
-    },
+  },
   async down(queryInterface, DataTypes) {
     await queryInterface.dropTable('roles');
   }

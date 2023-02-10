@@ -1,12 +1,15 @@
 # adventure-flow-be
 
-You'll want to install the following
-brew install mysql
-Then create database adventure_flow
+## Required to install
+- Node
+- MySQL
 
+## Installation
 
-Then install sequalize
-npm install --save-dev sequelize-cli
-
-Then run npx sequelize-cli db:migrate
-Then run npx sequelize-cli db:seed:all
+1. Clone git repo `https://github.com/Jeffsingh/adventure-flow-be.git`
+2. Run `npm install command` 
+3. Change db config in `adventure-flow-be/config/config.json`
+4. Run `npx sequelize db:create` to create database
+5. Run `npx sequelize db:migrate` to add all tables and relations
+6. Run `npx sequelize-cli db:seed:all` to add test data
+7. Run `node index.js` to start app
