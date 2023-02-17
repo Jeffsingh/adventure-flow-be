@@ -8,8 +8,8 @@ module.exports = {
         id: 1,
         first_name: "John",
         last_name: "Doe",
-        email: "john.doe@mail.com",
-        password: "",
+        email: "admin@mail.com",
+        password: "jGl25bVBBBW96Qi9Te4V37Fnqchz/Eu4qB9vKrRIqRg=",
         role: "1",
         createdAt: new Date(),
         updatedAt: new Date()
