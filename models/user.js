@@ -9,18 +9,18 @@ module.exports = (sequelize, DataTypes) => {
          * This method is not a part of Sequelize lifecycle.
          * The `models/index` file will call this method automatically.
          */
-        static associate({Role, Trip}) {
-            this.hasOne(Role, {as: 'roles', foreignKey: 'id'})
-            this.hasMany(Trip, {foreignKey:'created_by'})
+        static associate({ Role, Trip }) {
+            this.hasOne(Role, { as: 'roles', foreignKey: 'id' })
+            this.hasMany(Trip, { foreignKey: 'created_by' })
         }
     }
 
     User.init({
-        first_Name: {
+        first_name: {
             type: DataTypes.STRING,
             allowNull: false,
         },
-        last_Name: {
+        last_name: {
             type: DataTypes.STRING,
             allowNull: false,
         },
@@ -35,7 +35,7 @@ module.exports = (sequelize, DataTypes) => {
         },
         role: {
             type: DataTypes.INTEGER,
-            allowNull:false
+            allowNull: false
         }
     }, {
         sequelize,
