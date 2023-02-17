@@ -4,25 +4,28 @@ const User = require("../../models").User;
 const jwt = require("jsonwebtoken");
 
 const signUp = async (req, res) => {
-    const {email, password, name} = req.body;
+    const { first_name, last_name, email, password } = req.body;
     try {
-        let user = await User.findOne({where: {email}});
+        let user = await User.findOne({ where: { email } });
         if (user) {
             return sendResponse.sendErrorResponse(res, 422, 'User with that email already exists');
         }
 
         user = await User.create({
-            name,
+            first_name,
+            last_name,
             email,
-            password: hashing.hash(password)
+            password: hashing.hash(password),
+            role: 1
         });
-        let token = jwt.sign({id: user.id}, process.env.SEKRET_KEY, {
+        let token = jwt.sign({ id: user.id }, process.env.SEKRET_KEY, {
             expiresIn: 86400 // 24 hours
         });
 
         return sendResponse.sendSuccessResponse(res, 201, {
             user: {
-                name: user.name,
+                first_name: user.first_name,
+                last_name: user.last_name,
                 email: user.email,
                 accessToken: token
             }
@@ -34,18 +37,18 @@ const signUp = async (req, res) => {
 }
 
 const signIn = async (req, res) => {
-    const {email, password} = req.body;
+    const { email, password } = req.body;
 
     try {
-        const user = await User.findOne({where: {email: email}});
+        const user = await User.findOne({ where: { email: email } });
 
-        if (!user) return sendErrorResponse(res, 404, 'Incorrect login credentials');
+        if (!user) return sendResponse.sendErrorResponse(res, 404, 'Incorrect login credentials');
         const checkPassword = hashing.hash_compare(hashing.hash(password), user.password);
         if (!checkPassword) {
-            return sendErrorResponse(res, 400, 'Incorrect login credentials');
+            return sendResponse.sendErrorResponse(res, 400, 'Incorrect login credentials');
         }
 
-        let token = jwt.sign({id: user.id}, process.env.SEKRET_KEY, {
+        let token = jwt.sign({ id: user.id }, process.env.SEKRET_KEY, {
             expiresIn: 86400 // 24 hours
         });
 
@@ -64,7 +67,7 @@ const signIn = async (req, res) => {
 }
 
 const getUserById = (id) => {
-    return User.findOne({where: {id: id}, include: "roles"});
+    return User.findOne({ where: { id: id }, include: "roles" });
 }
 
 

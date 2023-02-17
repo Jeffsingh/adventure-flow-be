@@ -9,11 +9,11 @@ module.exports = {
         primaryKey: true,
         type: DataTypes.INTEGER
       },
-      first_Name: {
+      first_name: {
         type: DataTypes.STRING,
         allowNull: false,
       },
-      last_Name: {
+      last_name: {
         type: DataTypes.STRING,
         allowNull: false,
       },
