@@ -13,6 +13,10 @@ module.exports = (sequelize, DataTypes) => {
             this.hasOne(Role, { as: 'roles', foreignKey: 'id' })
             this.hasMany(Trip, { foreignKey: 'created_by' })
         }
+
+        toJSON() {
+            return {...this.get(), password:undefined};
+        }
     }
 
     User.init({
@@ -28,6 +32,10 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.STRING,
             allowNull: false,
             unique: true
+        },
+        image_url: {
+            type: DataTypes.STRING,
+            defaultValue: "uploads\\default_user.png"
         },
         password: {
             type: DataTypes.STRING,

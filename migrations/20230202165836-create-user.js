@@ -22,6 +22,10 @@ module.exports = {
         allowNull: false,
         unique: true
       },
+      image_url: {
+        type: DataTypes.STRING,
+        defaultValue: "uploads\\default_user.png"
+      },
       password: {
         type: DataTypes.STRING,
         allowNull: false

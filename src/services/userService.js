@@ -2,6 +2,19 @@ const sendResponse = require("../utils/sendResponse");
 const hashing = require("../utils/hashing")
 const User = require("../../models").User;
 const jwt = require("jsonwebtoken");
+const multer = require("multer");
+
+
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, './uploads');
+    },
+    filename: function (req, file, cb) {
+        cb(null, file.originalname);
+    }
+});
+
+const uploadImg = multer({storage: storage}).single('image');
 
 const signUp = async (req, res) => {
     const { first_name, last_name, email, password } = req.body;
@@ -16,6 +29,7 @@ const signUp = async (req, res) => {
             last_name,
             email,
             password: hashing.hash(password),
+            image_url: req.file?.path,
             role: 1
         });
         let token = jwt.sign({ id: user.id }, process.env.SEKRET_KEY, {
@@ -24,6 +38,7 @@ const signUp = async (req, res) => {
 
         return sendResponse.sendSuccessResponse(res, 201, {
             user: {
+                id: user.id,
                 first_name: user.first_name,
                 last_name: user.last_name,
                 email: user.email,
@@ -54,7 +69,9 @@ const signIn = async (req, res) => {
 
         return sendResponse.sendSuccessResponse(res, 200, {
             user: {
-                name: user.name,
+                id: user.id,
+                first_name: user.first_name,
+                last_name: user.last_name,
                 id: user.id,
                 email: user.email,
                 accessToken: token
@@ -73,6 +90,7 @@ const getUserById = (id) => {
 
 module.exports = {
     signUp,
+    uploadImg,
     signIn,
     getUserById
 };
