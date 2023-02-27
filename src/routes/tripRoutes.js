@@ -7,6 +7,8 @@ router.get("/:tripId", tripController.getTripById);
 
 router.get("/", tripController.getAllTrips);
 
+router.get("/user/:userId", tripController.getAllTripsByUserId);
+
 router.post("/", tripController.createTrip);
 
 router.put("/:tripId", tripController.updateTripById);

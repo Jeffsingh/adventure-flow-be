@@ -1,4 +1,5 @@
 const tripService = require('../services/tripService')
+const activityService = require('../services/activityService');
 
 const getTripById = (req, res) => {
     tripService.getTripById(req.params.tripId)
@@ -33,7 +34,7 @@ const getAllTrips = (req, res) => {
         });
 }
 
-const createTrip = (req, res) => {
+const createTrip = async (req, res) => {
     const {body} = req;
     console.log(body)
 
@@ -43,17 +44,26 @@ const createTrip = (req, res) => {
         duration: body.duration,
         created_by: body.created_by
     }
-    console.log(trip)
-    tripService.createTrip(trip)
-        .then(data => {
+    try {
+        const newTrip = await tripService.createTrip(trip);
+        if (body.activities) {
+            for (let activity of body.activities) {
+                const tripActivity = await activityService.getActivityById(activity.id);
+                console.log(tripActivity);
+                await newTrip.addActivity(tripActivity);
+            }
+        }
+        tripService.getTripById(newTrip.dataValues.id).then(data => {
             res.send(data);
         })
-        .catch(err => {
-            res.status(500).send({
-                message:
-                    err.message || "Some error occurred while creating trip."
-            });
+    } catch
+        (err) {
+        res.status(500).send({
+            message:
+                err.message || "Some error occurred while creating trip."
         });
+    }
+
 }
 
 const updateTripById = async (req, res) => {
@@ -93,10 +103,30 @@ const deleteTripById = async (req, res) => {
     }
 }
 
+const getAllTripsByUserId = (req, res) => {
+    tripService.getAllTripsByUserId(req.params.userId)
+        .then(data => {
+            if (data) {
+                res.send(data);
+            } else {
+                res.status(302).send({
+                    message: "Error: record does not exist"
+                })
+            }
+        })
+        .catch(err => {
+            res.status(500).send({
+                message:
+                    err.message || "Some error occurred while retrieving trip."
+            });
+        });
+}
+
 module.exports = {
     getTripById,
     getAllTrips,
     createTrip,
     updateTripById,
-    deleteTripById
+    deleteTripById,
+    getAllTripsByUserId
 }
