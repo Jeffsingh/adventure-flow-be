@@ -1,7 +1,7 @@
 const Trip = require('../../models').Trip;
 
 const getTripById = (id) => {
-    return Trip.findByPk(id);
+    return Trip.findOne({where: {id:id}, include: "activities"});
 }
 
 const getAllTrips = () => {
@@ -20,6 +20,10 @@ const deleteTripById = (id) => {
     return Trip.destroy({where: {id}});
 }
 
+const getAllTripsByUserId = (userId) => {
+    return Trip.findAll({where:{created_by:userId}, include: "activities"});
+}
+
 const checkIfExists = (id) => {
     return Trip.count({where: {id: id}}).then(count => {
             return count !== 0;
@@ -36,5 +40,6 @@ module.exports = {
     createTrip,
     updateTripById,
     deleteTripById,
-    checkIfExists
+    checkIfExists,
+    getAllTripsByUserId
 }

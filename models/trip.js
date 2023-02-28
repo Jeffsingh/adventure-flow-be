@@ -11,7 +11,7 @@ module.exports = (sequelize, DataTypes) => {
          */
         static associate({User, Activity, Type}) {
             this.hasOne(User, {foreignKey: 'id'});
-            this.belongsToMany(Activity, {foreignKey: 'trip_id', as: 'trips', through: 'trips_activities'});
+            this.belongsToMany(Activity, {foreignKey: 'trip_id',as:'activities', through: 'trips_activities'});
             this.belongsToMany(Type, {foreignKey: 'trip_id', as: 'trips_type', through: 'trips_types'})
         }
     }
