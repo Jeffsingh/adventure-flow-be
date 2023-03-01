@@ -3,7 +3,7 @@ const {body} = require('express-validator');
 const tripSchema = [
     body('name').notEmpty(),
     body('duration').isNumeric(),
-    body('start_date').notEmpty().isDate(),
+    body('start_date').notEmpty(),
     body('activities.*.id').notEmpty().isNumeric()
 ];
 

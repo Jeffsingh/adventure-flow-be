@@ -32,6 +32,19 @@ const getAllItems = (req, res) => {
         });
 }
 
+const getItemsByActivity = (req, res) => {
+    itemService.getItemsByActivity(req.params.activityId)
+        .then(data => {
+            res.send(data);
+        })
+        .catch(err => {
+            res.status(500).send({
+                message:
+                    err.message || "Some error occurred while retrieving items."
+            });
+        });
+}
+
 const updateItemById = async (req, res) => {
     const id = req.params.itemId;
     try {
@@ -93,5 +106,6 @@ module.exports = {
     getAllItems,
     createItem,
     updateItemById,
-    deleteItemById
+    deleteItemById,
+    getItemsByActivity
 }
