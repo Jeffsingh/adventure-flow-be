@@ -5,7 +5,7 @@ const {
 module.exports = (sequelize, DataTypes) => {
   class Type extends Model {
     static associate({Trip}) {
-      this.belongsToMany(Trip,{through: "trips_types", foreignKey: 'type_id', as: 'trip_types'})
+      this.belongsToMany(Trip, {foreignKey: 'type_id', as: 'trips', through: 'trips_types'})
     }
   }
   Type.init({

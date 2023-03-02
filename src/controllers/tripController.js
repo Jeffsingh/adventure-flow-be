@@ -1,5 +1,7 @@
 const tripService = require('../services/tripService')
 const activityService = require('../services/activityService');
+const typeService = require('../services/typeService');
+const itemService = require('../services/itemService');
 
 const getTripById = (req, res) => {
     tripService.getTripById(req.params.tripId)
@@ -49,8 +51,19 @@ const createTrip = async (req, res) => {
         if (body.activities) {
             for (let activity of body.activities) {
                 const tripActivity = await activityService.getActivityById(activity.id);
-                console.log(tripActivity);
                 await newTrip.addActivity(tripActivity);
+            }
+        }
+        if(body.types) {
+            for(let type of body.types){
+                const tripType = await typeService.getTypeById(type.id);
+                await newTrip.addType(tripType);
+            }
+        }
+        if(body.items){
+            for(let item of body.items){
+                const tripItem = await itemService.getItemById(item.id);
+                await newTrip.addItem(tripItem);
             }
         }
         tripService.getTripById(newTrip.dataValues.id).then(data => {

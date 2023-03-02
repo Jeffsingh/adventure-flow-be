@@ -9,6 +9,10 @@ const getAllItems = () => {
     return Item.findAll();
 }
 
+const getItemsByActivity = (activityId) => {
+    return Item.findAll({include: [{model: Activity, as:"activities", through: {where: {activity_id: activityId}}}]});
+}
+
 const createItem = (item) => {
     return Item.create(item);
 }
@@ -37,5 +41,6 @@ module.exports = {
     createItem,
     updateItemById,
     deleteItemById,
-    checkIfExists
+    checkIfExists,
+    getItemsByActivity
 }
