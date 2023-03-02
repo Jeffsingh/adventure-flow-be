@@ -17,5 +17,7 @@ router.put("/:itemId", itemSchema, validateRequest, itemController.updateItemByI
 
 router.delete("/:itemId", itemController.deleteItemById);
 
+router.get("/tips/search", itemController.getItemTips);
+
 
 module.exports = router;

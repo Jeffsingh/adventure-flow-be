@@ -1,4 +1,5 @@
-const itemService = require('../services/itemService')
+const openaiApiService = require('../services/openaiApiService');
+const itemService = require('../services/itemService');
 
 const getItemById = (req, res) => {
     itemService.getItemById(req.params.itemId)
@@ -101,11 +102,25 @@ const deleteItemById = async (req, res) => {
     }
 }
 
+const getItemTips = async (req, res) => {
+    const types = req.query.type instanceof Array ? req.query.type.join(", ") : req.query.type;
+    const requestMessage = "Create a list of essential items for a " + types + " trip";
+    try {
+        res.status(200).send(await openaiApiService.generateResponse(requestMessage));
+    } catch (err) {
+        res.status(500).send({
+            message:
+                err.message || "Some error occurred while requesting openai API"
+        });
+    }
+}
+
 module.exports = {
     getItemById,
     getAllItems,
     createItem,
     updateItemById,
     deleteItemById,
-    getItemsByActivity
+    getItemsByActivity,
+    getItemTips
 }
