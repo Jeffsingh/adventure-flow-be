@@ -12,5 +12,5 @@
 4. Run `npx sequelize db:create` to create database
 5. Run `npx sequelize db:migrate` to add all tables and relations
 6. Run `npx sequelize-cli db:seed:all` to add test data
-7. Create .env file and add SEKRET_KEY and OPENAI_API_KEY variables
+7. Create .env file and add OPENAI_API_KEY variable
 8. Run `node index.js` to start app

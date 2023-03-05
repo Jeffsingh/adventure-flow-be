@@ -1,4 +1,5 @@
 const express = require('express');
+const security = require("./src/security/security");
 const bodyParser = require("body-parser");
 const cookieParser = require('cookie-parser');
 const tripRouter = require('./src/routes/tripRoutes');
@@ -7,12 +8,10 @@ const roleRoutes = require('./src/routes/roleRoutes');
 const activityRoutes = require('./src/routes/activityRoutes');
 const itemRoutes = require('./src/routes/itemRoutes');
 const cors = require('cors');
-
-// const authJwt = require("./src/middlewares/authJwt");
-
 const { sequelize } = require("./models")
 
 const app = express();
+security.init();
 
 app.use(bodyParser.json());
 app.use(express.urlencoded({ extended: true }));

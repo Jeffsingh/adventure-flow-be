@@ -104,7 +104,7 @@ const deleteItemById = async (req, res) => {
 
 const getItemTips = async (req, res) => {
     const types = req.query.type instanceof Array ? req.query.type.join(", ") : req.query.type;
-    const requestMessage = "Create a list of essential items for a " + types + " trip";
+    const requestMessage = "Create a list of 5 essential items for a " + types + " trip";
     try {
         res.status(200).send(await openaiApiService.generateResponse(requestMessage));
     } catch (err) {

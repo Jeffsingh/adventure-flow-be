@@ -9,6 +9,7 @@ const generateResponse = async (request) => {
     const completion = await openai.createCompletion({
         model: "text-davinci-003",
         prompt: request,
+        max_tokens: 250,
         temperature: 1,
     });
     const result = await completion.data.choices[0].text;
