@@ -28,30 +28,22 @@ const googleOauthHandler = async (req, res) => {
             email: email
         }
         let token;
+        let message;
 
         const userRecord = await userService.getUserByEmail(user.email);
-        console.log("USER RECORD");
-        console.log(userRecord);
 
         if (!userRecord) {
-            console.log("CREATED NEW USER")
             user["role"] = 1;
             user["password"] = "";
             user = await User.create(user);
-            console.log(user)
-
-            console.log(user.id);
-            console.log(user.email);
-            token = authJwt.generateJwtToken(newUser);
+            token = authJwt.generateJwtToken(user);
+            message = 'Successfully created account';
         } else {
-            console.log("UPDATED USER")
             console.log(userRecord.id);
             await userService.updateUser(userRecord.id, user);
             user = await userService.getUserById(userRecord.id);
             token = authJwt.generateJwtToken(user);
-            console.log(user)
-            console.log(user.id);
-            console.log(user.email);
+            message = 'Login successfully';
         }
 
         if (!user) {
@@ -66,7 +58,7 @@ const googleOauthHandler = async (req, res) => {
                 accessToken: token
             },
             publicKey: authJwt.getPublicKey()
-        }, 'Login successfully');
+        }, message);
     } catch (err) {
         return sendResponse.sendErrorResponse(res, 500, 'Server error, failed to authorize Google User', err)
     }

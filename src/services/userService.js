@@ -1,3 +1,4 @@
+const {Type} = require("../../models");
 const User = require('../../models').User;
 
 const getUserById = (id) => {
@@ -22,9 +23,15 @@ const checkIfExists = (value) => {
     })
 }
 
+const deleteUserById = async (id) => {
+    const user = await User.findByPk(id);
+    return user.destroy();
+}
+
 module.exports = {
     getUserById,
     checkIfExists,
     getUserByEmail,
-    updateUser
+    updateUser,
+    deleteUserById
 };
