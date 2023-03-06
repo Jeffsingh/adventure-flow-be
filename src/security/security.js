@@ -2,12 +2,12 @@ const fs = require('fs');
 const crypto = require('crypto');
 
 const init = () => {
-    generateKeyPair('private.key', 'public.pem', 'myPassphrase');
+    generateKeyPair();
 }
 
 
-const generateKeyPair = (privateKeyPath, publicKeyPath, passphrase = '') => {
-    const { privateKey, publicKey } = crypto.generateKeyPairSync('rsa', {
+const generateKeyPair = () => {
+    const {privateKey, publicKey} = crypto.generateKeyPairSync('rsa', {
         modulusLength: 4096,
         publicKeyEncoding: {
             type: 'spki',
@@ -18,13 +18,8 @@ const generateKeyPair = (privateKeyPath, publicKeyPath, passphrase = '') => {
             format: 'pem'
         }
     });
-
-    // зберігаємо private key у файл
-    fs.writeFileSync(privateKeyPath, privateKey);
-
-    // зберігаємо public key у файл
-    fs.writeFileSync(publicKeyPath, publicKey);
-
+    fs.writeFileSync('private.key', privateKey);
+    fs.writeFileSync('public.pem', publicKey);
     console.log('Keys generated and saved!');
 };
 
