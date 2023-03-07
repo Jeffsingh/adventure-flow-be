@@ -1,14 +1,15 @@
-const jwt = require("jsonwebtoken");
 require('dotenv').config();
 const userService = require("../services/userService");
-const User = require("../../models").User;
+const authService = require("../services/authService");
+const {User} = require("../../models");
+const tripService = require("../services/tripService");
 
 const signUp = async (req, res) => {
-    userService.signUp(req, res);
+    authService.signUp(req, res);
 }
 
 const signIn = async (req, res) => {
-    userService.signIn(req, res);
+    authService.signIn(req, res);
 }
 
 const getUserById = async (req, res) => {
@@ -24,8 +25,27 @@ const getUserById = async (req, res) => {
         });
 }
 
+const removeUserById = async (req, res) => {
+    try {
+        let id = req.params.userId;
+        if (await userService.checkIfExists(id)) {
+            userService.deleteUserById(req.params.userId)
+            res.send("User with id " + req.params.userId + " successfully removed");
+        } else {
+            res.status(302).send({
+                message: "Error: record does not exist"
+            })
+        }
+    } catch (err) {
+        res.status(500).send({
+            message: err.message || "Some error occurred while removing user."
+        });
+    }
+}
+
 module.exports = {
     signUp,
     signIn,
-    getUserById
+    getUserById,
+    removeUserById
 };
