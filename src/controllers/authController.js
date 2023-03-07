@@ -1,4 +1,4 @@
-const {getGoogleOauthToken, getGoogleUser, getAuthorizationUri} = require('../security/oauth2/service');
+const {getGoogleOauthToken, getGoogleUser, getAuthorizationUri} = require('../security/oauth2/google/service');
 const userService = require('../services/userService');
 const User = require('../../models').User;
 const authJwt = require('../security/authJwt');
@@ -31,6 +31,7 @@ const googleOauthHandler = async (req, res) => {
         let message;
 
         const userRecord = await userService.getUserByEmail(user.email);
+        //TODO image upload
 
         if (!userRecord) {
             user["role"] = 1;
@@ -52,8 +53,9 @@ const googleOauthHandler = async (req, res) => {
 
         return sendResponse.sendSuccessResponse(res, 200, {
             user: {
-                name: user.name,
                 id: user.id,
+                first_name: user.first_name,
+                last_name: user.last_name,
                 email: user.email,
                 accessToken: token
             }
