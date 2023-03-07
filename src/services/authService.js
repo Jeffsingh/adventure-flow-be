@@ -3,14 +3,7 @@ const sendResponse = require('../utils/sendResponse');
 const hashing = require('../utils/hashing')
 const authJwt = require('../security/authJwt')
 const User = require('../../models').User;
-let publicKey;
 
-function getPublicKey() {
-    if (!publicKey) {
-        publicKey = fs.readFileSync('public.pem', 'utf-8');
-    }
-    return publicKey;
-}
 
 const signUp = async (req, res) => {
     publicKey = getPublicKey();
@@ -37,8 +30,7 @@ const signUp = async (req, res) => {
                 last_name: user.last_name,
                 email: user.email,
                 accessToken: token,
-            },
-            publicKey: publicKey.toString('base64')
+            }
         }, 'Account created successfully');
     } catch (e) {
         console.error(e);
@@ -47,7 +39,6 @@ const signUp = async (req, res) => {
 }
 
 const signIn = async (req, res) => {
-    publicKey = getPublicKey();
     const {email, password} = req.body;
     try {
         const user = await User.findOne({where: {email: email}});
@@ -66,8 +57,7 @@ const signIn = async (req, res) => {
                 id: user.id,
                 email: user.email,
                 accessToken: token
-            },
-            publicKey: publicKey.toString('base64')
+            }
         }, 'Login successfully');
     } catch (e) {
         console.error(e);

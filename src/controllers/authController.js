@@ -56,8 +56,7 @@ const googleOauthHandler = async (req, res) => {
                 id: user.id,
                 email: user.email,
                 accessToken: token
-            },
-            publicKey: authJwt.getPublicKey()
+            }
         }, message);
     } catch (err) {
         return sendResponse.sendErrorResponse(res, 500, 'Server error, failed to authorize Google User', err)

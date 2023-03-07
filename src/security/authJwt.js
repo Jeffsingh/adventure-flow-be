@@ -1,14 +1,6 @@
 const jwt = require("jsonwebtoken");
 const fs = require('fs');
-let publicKey;
 let privateKey;
-
-const getPublicKey = () => {
-    if (!publicKey) {
-        publicKey = fs.readFileSync('public.pem', 'utf8');
-    }
-    return publicKey;
-}
 
 const getPrivateKey = () => {
     if (!privateKey) {
@@ -64,6 +56,6 @@ const verifyUserId = (req, res, next) => {
 
 
 const authJwt = {
-    verifyToken: verifyToken, verifyUserId: verifyUserId, generateJwtToken: generateJwtToken, getPublicKey: getPublicKey, getPrivateKey:getPrivateKey
+    verifyToken: verifyToken, verifyUserId: verifyUserId, generateJwtToken: generateJwtToken,  getPrivateKey:getPrivateKey
 };
 module.exports = authJwt;
