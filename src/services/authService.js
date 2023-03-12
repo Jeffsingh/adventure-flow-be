@@ -6,7 +6,6 @@ const User = require('../../models').User;
 
 
 const signUp = async (req, res) => {
-    publicKey = getPublicKey();
     const {first_name, last_name, email, password} = req.body;
     try {
         let user = await User.findOne({where: {email}});
