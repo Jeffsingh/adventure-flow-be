@@ -19,7 +19,7 @@ const signupSchema = [
     body('first_name').notEmpty(),
     body('last_name').notEmpty(),
     body('email').isEmail(),
-    body('password').notEmpty().matches("^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$"),
+    body('password').notEmpty()//matches("^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$"),
 ];
 
 const loginSchema = [

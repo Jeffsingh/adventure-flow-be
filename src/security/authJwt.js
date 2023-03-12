@@ -1,12 +1,20 @@
 const jwt = require("jsonwebtoken");
 const fs = require('fs');
 let privateKey;
+let publicKey;
 
 const getPrivateKey = () => {
     if (!privateKey) {
         privateKey = fs.readFileSync('private.key', 'utf-8');
     }
     return privateKey;
+}
+
+const getPublicKey = () => {
+    if (!publicKey) {
+        publicKey = fs.readFileSync('public.pem', 'utf-8');
+    }
+    return publicKey;
 }
 
 const generateJwtToken = (user) => {
