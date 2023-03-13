@@ -6,6 +6,7 @@ module.exports = {
     return queryInterface.bulkInsert('trips', [
       {
         id: 1,
+        uuid: "31c9f93a-0cf2-41c7-a70b-336b19cd4307",
         name: "Trip_1",
         duration: 5,
         start_date: new Date(),
