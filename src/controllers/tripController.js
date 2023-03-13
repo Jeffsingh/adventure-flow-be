@@ -45,6 +45,7 @@ const createTrip = async (req, res) => {
         name: body.name,
         start_date: body.start_date,
         duration: body.duration,
+        location: body.location,
         created_by: body.created_by
     }
     try {
@@ -55,19 +56,13 @@ const createTrip = async (req, res) => {
                 await newTrip.addActivity(tripActivity);
             }
         }
-        if(body.types) {
-            for(let type of body.types){
-                const tripType = await typeService.getTypeById(type.id);
-                await newTrip.addType(tripType);
-            }
-        }
         if(body.items){
             for(let item of body.items){
                 const tripItem = await itemService.getItemById(item.id);
                 await newTrip.addItem(tripItem);
             }
         }
-        tripService.getTripById(newTrip.dataValues.id).then(data => {
+        tripService.getTripById(newTrip.dataValues.uuid).then(data => {
             res.send(data);
         })
     } catch
