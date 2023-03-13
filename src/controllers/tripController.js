@@ -2,6 +2,7 @@ const tripService = require('../services/tripService')
 const activityService = require('../services/activityService');
 const typeService = require('../services/typeService');
 const itemService = require('../services/itemService');
+const userService = require('../services/userService');
 
 const getTripById = (req, res) => {
     tripService.getTripById(req.params.tripId)
@@ -116,23 +117,30 @@ const deleteTripById = async (req, res) => {
     }
 }
 
-const getAllTripsByUserId = (req, res) => {
-    tripService.getAllTripsByUserId(req.params.userId)
-        .then(data => {
-            if (data) {
-                res.send(data);
-            } else {
-                res.status(302).send({
-                    message: "Error: record does not exist"
-                })
-            }
-        })
-        .catch(err => {
-            res.status(500).send({
-                message:
-                    err.message || "Some error occurred while retrieving trip."
+const getAllTripsByUserId = async (req, res) => {
+    const user = await userService.getUserById(req.params.userId);
+    if (user) {
+        tripService.getAllTripsByUserId(user.id)
+            .then(data => {
+                if (data) {
+                    res.send(data);
+                } else {
+                    res.status(302).send({
+                        message: "Error: record does not exist"
+                    })
+                }
+            })
+            .catch(err => {
+                res.status(500).send({
+                    message:
+                        err.message || "Some error occurred while retrieving trip."
+                });
             });
-        });
+    } else {
+        res.status(302).send({
+            message: "Error: user does not exist"
+        })
+    }
 }
 
 module.exports = {

@@ -20,7 +20,7 @@ const getPublicKey = () => {
 const generateJwtToken = (user) => {
     privateKey = getPrivateKey();
     try {
-        return jwt.sign({id: user.id, email: user.email, first_name: user.first_name, last_name: user.last_name}, privateKey, {
+        return jwt.sign({id: user.uuid, email: user.email, first_name: user.first_name, last_name: user.last_name}, privateKey, {
             algorithm: 'RS256', expiresIn: 86400 // 24 hours
         });
     } catch (err) {

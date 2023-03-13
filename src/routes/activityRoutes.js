@@ -15,4 +15,6 @@ router.put("/:activityId",  activitySchema, validateRequest, activityController.
 
 router.delete("/:activityId", activityController.deleteActivityById);
 
+router.get("/tips/search", activityController.getRecommendedActivitiesByLocation);
+
 module.exports = router;

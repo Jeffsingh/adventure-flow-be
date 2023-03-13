@@ -24,7 +24,7 @@ const signUp = async (req, res) => {
 
         return sendResponse.sendSuccessResponse(res, 201, {
             user: {
-                id: user.id,
+                id: user.uuid,
                 first_name: user.first_name,
                 last_name: user.last_name,
                 email: user.email,
@@ -52,8 +52,9 @@ const signIn = async (req, res) => {
 
         return sendResponse.sendSuccessResponse(res, 200, {
             user: {
-                name: user.name,
-                id: user.id,
+                id: user.uuid,
+                first_name: user.first_name,
+                last_name: user.last_name,
                 email: user.email,
                 accessToken: token
             }
