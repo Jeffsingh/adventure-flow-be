@@ -103,10 +103,17 @@ const deleteItemById = async (req, res) => {
 }
 
 const getItemTips = async (req, res) => {
-    const types = req.query.type instanceof Array ? req.query.type.join(", ") : req.query.type;
-    const requestMessage = "Create a list of 5 essential items for a " + types + " trip";
+    const location = req.query.location;
+    const activities = req.query.activities instanceof Array ? req.query.activities.join(", ") : req.query.activities;
+    const listLength = 10;
+    let requestTemplate = "Create a list of items for trip.List length - " + listLength + ",list format - js array."
+    if (location)
+        requestTemplate = requestTemplate + " Location - " + location + ".";
+    if (activities)
+        requestTemplate = requestTemplate + " Activities types - " + activities + ".";
+
     try {
-        res.status(200).send(await openaiApiService.generateResponse(requestMessage));
+        res.status(200).send(await openaiApiService.generateResponse(requestTemplate));
     } catch (err) {
         res.status(500).send({
             message:

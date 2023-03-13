@@ -2,7 +2,7 @@ const {Type} = require("../../models");
 const User = require('../../models').User;
 
 const getUserById = (id) => {
-    return User.findOne({where: {id: id}});
+    return User.findOne({where: {uuid: id}});
 }
 
 const getUserByEmail = (email) => {
@@ -10,11 +10,11 @@ const getUserByEmail = (email) => {
 }
 
 const updateUser = (id, user) => {
-    return User.update(user, {where: {id}});
+    return User.update(user, {where: {uuid:id}});
 }
 
 const checkIfExists = (value) => {
-    return User.count({where: {id: value}}).then(count => {
+    return User.count({where: {uuid: value}}).then(count => {
             return count !== 0;
         }
     ).catch(err => {
@@ -24,7 +24,7 @@ const checkIfExists = (value) => {
 }
 
 const deleteUserById = async (id) => {
-    const user = await User.findByPk(id);
+    const user = await User.findByPk({where: {uuid: id}});
     return user.destroy();
 }
 

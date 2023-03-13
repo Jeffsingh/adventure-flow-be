@@ -1,4 +1,5 @@
 const activityService = require('../services/activityService')
+const openaiApiService = require("../services/openaiApiService");
 
 const getActivityById = (req, res) => {
     activityService.getActivityById(req.params.activityId)
@@ -87,6 +88,31 @@ const deleteActivityById = async (req, res) => {
     }
 }
 
+const getRecommendedActivitiesByLocation = async (req, res) => {
+    const location = req.query.location;
+    const activities = req.query.activities instanceof Array ? req.query.activities.join(", ") : req.query.activities;
+    const listLength = 10;
+    let requestTemplate = "Create a list of activities for trip.List length - " + listLength + ",list format - js array."
+    if (location)
+        requestTemplate = requestTemplate + " Location - " + location + ".";
+    if (activities)
+        requestTemplate = requestTemplate + " Activities types - " + activities + ".";
+
+    try {
+        res.status(200).send(await openaiApiService.generateResponse(requestTemplate));
+    } catch (err) {
+        res.status(500).send({
+            message:
+                err.message || "Some error occurred while requesting openai API"
+        });
+    }
+}
+
 module.exports = {
-    getActivityById, getAllActivities, createActivity, updateActivityById, deleteActivityById
+    getActivityById,
+    getAllActivities,
+    createActivity,
+    updateActivityById,
+    deleteActivityById,
+    getRecommendedActivitiesByLocation
 }
