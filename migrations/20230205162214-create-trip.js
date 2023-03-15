@@ -17,6 +17,10 @@ module.exports = {
         type: DataTypes.STRING,
         allowNull: false,
       },
+      location: {
+        type: DataTypes.STRING,
+        allowNull: false
+      },
       duration: {
         type: DataTypes.INTEGER,
         allowNull: false
