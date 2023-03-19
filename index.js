@@ -7,6 +7,7 @@ const userRoutes = require('./src/routes/userRoutes');
 const roleRoutes = require('./src/routes/roleRoutes');
 const activityRoutes = require('./src/routes/activityRoutes');
 const itemRoutes = require('./src/routes/itemRoutes');
+const dbRoutes = require('./src/routes/dbDataRoutes');
 const sessionRoutes = require('./src/routes/sessionRoutes');
 const cors = require('cors');
 const { sequelize } = require("./models")
@@ -33,6 +34,7 @@ app.use('/api/roles', roleRoutes);
 app.use('/api/activities', activityRoutes);
 app.use('/api/items', itemRoutes);
 app.use('/api/sessions', sessionRoutes);
+app.use('/api/db', dbRoutes);
 
 app.listen(8000, () => {
     console.log("Start app");

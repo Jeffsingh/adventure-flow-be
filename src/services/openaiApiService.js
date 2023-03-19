@@ -4,16 +4,26 @@ const configuration = new Configuration({
 });
 const openai = new OpenAIApi(configuration);
 
-const generateResponse = async (request) => {
+const generateResponse = async (request, timeout = 5000) => {
     console.log("Request:" + request);
-    const completion = await openai.createCompletion({
+
+    const timeoutPromise = new Promise((resolve, reject) => {
+        setTimeout(() => {
+            reject(new Error("Request timed out"));
+        }, timeout);
+    });
+
+    const apiPromise = openai.createCompletion({
         model: "text-davinci-003",
         prompt: request,
         max_tokens: 250,
         temperature: 1,
     });
+
+    const completion = await Promise.race([apiPromise, timeoutPromise]);
+
     const result = await completion.data.choices[0].text;
-    console.log(result)
+    console.log("Response - :" + result);
     return result;
 }
 

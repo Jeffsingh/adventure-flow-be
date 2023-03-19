@@ -133,3 +133,5 @@ dist
 
 private.key
 public.pem
+credentials.json
+token.json
