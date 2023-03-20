@@ -93,7 +93,7 @@ const getRecommendedActivitiesByLocation = async (req, res) => {
     const location = req.query.location;
     const activities = req.query.activities instanceof Array ? req.query.activities.join(", ") : req.query.activities;
     const listLength = 10;
-    let requestTemplate = "Create a list of activities for trip.List length - " + listLength + ",list format - js array."
+    let requestTemplate = "Create an unnumbered list of itinerary items for trip.List length - " + listLength + ",list format - comma delimited."
     if (location)
         requestTemplate = requestTemplate + " Location - " + location + ".";
     if (activities)
@@ -101,14 +101,18 @@ const getRecommendedActivitiesByLocation = async (req, res) => {
 
     let openResponse = null; 
     try {
-        openResponse = await openaiApiService.generateResponse(requestTemplate)
+        openResponse = await openaiApiService.generateResponse(requestTemplate);
+
+        openResponse = openResponse.replace(/(?:\r\n|\r|\n)/g, '');
+        openResponse = openResponse.replace(".", " ");
+        openResponse = openResponse.split(',');  
+        openResponse = openResponse.map((item) => item.trim()); 
     } catch(err) {
         res.status(500).send({
             message: "Our api service failed: " + err.message
         });
         return; 
-    } 
-    
+    }  
     res.status(200).send(openResponse);
  
 }
