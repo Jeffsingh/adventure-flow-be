@@ -4,7 +4,7 @@ const configuration = new Configuration({
 });
 const openai = new OpenAIApi(configuration);
 
-const generateResponse = async (request, timeout = 5000) => {
+const generateResponse = async (request, timeout = 10000) => {
     console.log("Request:" + request);
 
     const timeoutPromise = new Promise((resolve, reject) => {

@@ -1,11 +1,12 @@
 const express = require('express');
-const {getAllActivities, generateData} = require('../dbImport/spreadsheetsService');
+const {getAllActivities, generateData, syncData} = require('../dbImport/spreadsheetsService');
 
 const router = express.Router();
-
 
 router.get("/getActivitiesItems", getAllActivities);
 
 router.get("/generateData", generateData);
+
+router.get("/syncData", syncData);
 
 module.exports = router;

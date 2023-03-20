@@ -5,6 +5,9 @@ const getItemById = (id) => {
     return Item.findByPk(id);
 }
 
+const getItemByName = async (name) => {
+    return await Item.findOne({where: {name: name}});
+}
 const getAllItems = () => {
     return Item.findAll();
 }
@@ -25,8 +28,8 @@ const deleteItemById = (id) => {
     return Item.destroy({where: {id}});
 }
 
-const checkIfExists = (id) => {
-    return Item.count({where: {id: id}}).then(count => {
+const checkIfExists = async (field, value) => {
+    return Item.count({where: {[field]: value}}).then(count => {
             return count !== 0;
         }
     ).catch(err => {
@@ -42,5 +45,6 @@ module.exports = {
     updateItemById,
     deleteItemById,
     checkIfExists,
-    getItemsByActivity
+    getItemsByActivity,
+    getItemByName
 }

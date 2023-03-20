@@ -8,6 +8,8 @@ const SPREAD_SHEET_ID = process.env.SPREAD_SHEET_ID;
 const SCOPES = ['https://www.googleapis.com/auth/spreadsheets'];
 const TOKEN_PATH = path.join(process.cwd(), 'token.json');
 const CREDENTIALS_PATH = path.join(process.cwd(), 'credentials.json');
+const activityService = require('../services/activityService');
+const itemService = require('../services/itemService');
 
 
 /**
@@ -116,7 +118,8 @@ const getAllActivities = async (req, res) => {
         res.status(500).send({
             message:
                 err.message || "Error to get activities data"
-        });    }
+        });
+    }
 }
 
 const generateData = async () => {
@@ -163,8 +166,54 @@ const parseResponseArray = (response) => {
     return response.substring(openBrIndex, closeBrIndex + 1);
 }
 
+const syncData = async (req, res) => {
+    try {
+        const auth = await authorize();
+        const activitiesItems = await getRows(auth, 'A:B');
+        for (let activityItems of activitiesItems) {
+            try {
+                let activity = activityItems[0];
+                let items = activityItems[1].split(';\n');
+                let _activity;
+                if (await activityService.checkIfExists('name', activity)) {
+                    _activity = await activityService.getActivityByName(activity);
+                } else {
+                    _activity = await activityService.createActivity({name: activity});
+                }
+
+                if (_activity) {
+                    for (let item of items) {
+                        let _item;
+                        if (await itemService.checkIfExists('name', item.trim())) {
+                            _item = await itemService.getItemByName(item.trim());
+                        } else {
+                            _item = await itemService.createItem({name: item});
+                        }
+                        if (_item) {
+                            await _activity.addItem(_item);
+                        } else {
+                            console.log("Error to get item")
+                        }
+                    }
+                } else {
+                    console.log("Error to get activity")
+                }
+
+            } catch (err) {
+                console.log("Error to parse activity - " + activityItems[0] + '\n' + err);
+            }
+        }
+        res.send("Data successfully synced")
+    } catch (err) {
+        res.status(500).send({
+            message:
+                err.message || "Error to get sync data"
+        });
+    }
+}
 
 module.exports = {
     getAllActivities,
-    generateData
+    generateData,
+    syncData
 }

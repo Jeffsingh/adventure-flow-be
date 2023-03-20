@@ -1,27 +1,31 @@
 const Activity = require('../../models').Activity;
 
-const getActivityById = (id) => {
-    return Activity.findByPk(id);
+const getActivityById = async (id) => {
+    return await Activity.findByPk(id, {include: ["items"]});
 }
 
-const getAllActivities = () => {
-    return Activity.findAll();
+const getActivityByName = async (name) => {
+    return await Activity.findOne({where: {name: name}});
 }
 
-const createActivity = (activity) => {
-    return Activity.create(activity);
+const getAllActivities = async () => {
+    return await Activity.findAll( {include: ["items"]});
 }
 
-const updateActivityById = (id, activity) => {
-    return Activity.update(activity, {where: {id}});
+const createActivity = async (activity) => {
+    return await Activity.create(activity);
 }
 
-const deleteActivityById = (id) => {
-    return Activity.destroy({where: {id}});
+const updateActivityById = async (id, activity) => {
+    return await Activity.update(activity, {where: {id}});
 }
 
-const checkIfExists = (id) => {
-    return Activity.count({where: {id: id}}).then(count => {
+const deleteActivityById = async (id) => {
+    return await Activity.destroy({where: {id}});
+}
+
+const checkIfExists = async (field, value) => {
+    return await Activity.count({where: {[field]: value}}).then(count => {
             return count !== 0;
         }
     ).catch(err => {
@@ -36,5 +40,6 @@ module.exports = {
     createActivity,
     updateActivityById,
     deleteActivityById,
-    checkIfExists
+    checkIfExists,
+    getActivityByName
 }
