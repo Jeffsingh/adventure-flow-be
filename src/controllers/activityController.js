@@ -91,20 +91,24 @@ const deleteActivityById = async (req, res) => {
 const formatResponse = (openResponse) => {
     openResponse = openResponse.replace(/(?:\r\n|\r|\n)/g, '');
     openResponse = openResponse.replace(".", " ");
-    openResponse = openResponse.split(',');  
+    openResponse = openResponse.split(',');   
     return openResponse.map((item) => item.trim()); 
 }; 
 
 const getRecommendedActivitiesByLocation = async (req, res) => {
     
-    const location = req.query.location;
-    const activities = req.query.activities instanceof Array ? req.query.activities.join(", ") : req.query.activities;
-    const listLength = 10;
-    let requestTemplate = "Create an unnumbered list of itinerary items for trip.List length - " + listLength + ",list format - comma delimited."
-    if (location)
-        requestTemplate = requestTemplate + " Location - " + location + ".";
-    if (activities)
-        requestTemplate = requestTemplate + " Activities types - " + activities + ".";
+    const location = req.query.location || "";
+    //const activities = req.query.activities instanceof Array ? req.query.activities.join(", ") : req.query.activities;
+    const activities = "vacation, outdoor"
+    const listLength = 12;
+    const month = req.query.month || "March"
+    const query = "Create an unnumbered list of itinerary items for trip. "; 
+    requestTemplate = query; 
+    requestTemplate += "List length - " + listLength + ". "; 
+    requestTemplate += "List format - comma delimited. ";  
+    requestTemplate += "Location - " + location + ". "; 
+    requestTemplate += "Activities types - " + activities + ". ";
+    requestTemplate += "Time of year - " + month + ".";
 
     console.log("requesting", requestTemplate);
     let openResponse = null; 
@@ -117,8 +121,7 @@ const getRecommendedActivitiesByLocation = async (req, res) => {
         });
         return; 
     }  
-    res.status(200).send(openResponse);
- 
+    res.status(200).send(openResponse); 
 }
 
 module.exports = {
