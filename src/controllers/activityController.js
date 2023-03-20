@@ -89,6 +89,7 @@ const deleteActivityById = async (req, res) => {
 }
 
 const getRecommendedActivitiesByLocation = async (req, res) => {
+    
     const location = req.query.location;
     const activities = req.query.activities instanceof Array ? req.query.activities.join(", ") : req.query.activities;
     const listLength = 10;
@@ -98,14 +99,18 @@ const getRecommendedActivitiesByLocation = async (req, res) => {
     if (activities)
         requestTemplate = requestTemplate + " Activities types - " + activities + ".";
 
+    let openResponse = null; 
     try {
-        res.status(200).send(await openaiApiService.generateResponse(requestTemplate));
-    } catch (err) {
+        openResponse = await openaiApiService.generateResponse(requestTemplate)
+    } catch(err) {
         res.status(500).send({
-            message:
-                err.message || "Some error occurred while requesting openai API"
+            message: "Our api service failed: " + err.message
         });
-    }
+        return; 
+    } 
+    
+    res.status(200).send(openResponse);
+ 
 }
 
 module.exports = {
