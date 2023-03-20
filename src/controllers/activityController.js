@@ -88,6 +88,13 @@ const deleteActivityById = async (req, res) => {
     }
 }
 
+const formatResponse = (openResponse) => {
+    openResponse = openResponse.replace(/(?:\r\n|\r|\n)/g, '');
+    openResponse = openResponse.replace(".", " ");
+    openResponse = openResponse.split(',');  
+    return openResponse.map((item) => item.trim()); 
+}; 
+
 const getRecommendedActivitiesByLocation = async (req, res) => {
     
     const location = req.query.location;
@@ -99,14 +106,11 @@ const getRecommendedActivitiesByLocation = async (req, res) => {
     if (activities)
         requestTemplate = requestTemplate + " Activities types - " + activities + ".";
 
+    console.log("requesting", requestTemplate);
     let openResponse = null; 
     try {
-        openResponse = await openaiApiService.generateResponse(requestTemplate);
-
-        openResponse = openResponse.replace(/(?:\r\n|\r|\n)/g, '');
-        openResponse = openResponse.replace(".", " ");
-        openResponse = openResponse.split(',');  
-        openResponse = openResponse.map((item) => item.trim()); 
+        openResponse = await openaiApiService.generateResponse(requestTemplate); 
+        openResponse = formatResponse(openResponse); 
     } catch(err) {
         res.status(500).send({
             message: "Our api service failed: " + err.message
