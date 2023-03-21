@@ -19,7 +19,7 @@ const generateResponse = async (request, timeout = 10000) => {
         max_tokens: 250,
         temperature: 1,
     });
-
+ 
     const completion = await Promise.race([apiPromise, timeoutPromise]);
 
     const result = await completion.data.choices[0].text;

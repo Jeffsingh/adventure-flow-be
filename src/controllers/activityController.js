@@ -95,25 +95,25 @@ const formatResponse = (openResponse) => {
     return openResponse.map((item) => item.trim()); 
 }; 
 
+const formatQuery = (query, listLength, format, location, activities, month) => { 
+    query += "List length - " + listLength + ". "; 
+    query += "List format - " + format + ". ";  
+    query += "Location - " + location + ". "; 
+    query += "Activities types - " + activities + ". ";
+    query += "Time of year - " + month + ".";
+    return query; 
+};; 
+
 const getRecommendedActivitiesByLocation = async (req, res) => {
     
     const location = req.query.location || "";
     //const activities = req.query.activities instanceof Array ? req.query.activities.join(", ") : req.query.activities;
-    const activities = "vacation, outdoor"
-    const listLength = 12;
     const month = req.query.month || "March"
-    const query = "Create an unnumbered list of itinerary items for trip. "; 
-    requestTemplate = query; 
-    requestTemplate += "List length - " + listLength + ". "; 
-    requestTemplate += "List format - comma delimited. ";  
-    requestTemplate += "Location - " + location + ". "; 
-    requestTemplate += "Activities types - " + activities + ". ";
-    requestTemplate += "Time of year - " + month + ".";
-
-    console.log("requesting", requestTemplate);
+    const text = "Create an unnumbered list of itinerary items for trip. "; 
+    const query = formatQuery(text,  12, "comma delimited", location, "vacation, outdoor", month);  
     let openResponse = null; 
     try {
-        openResponse = await openaiApiService.generateResponse(requestTemplate); 
+        openResponse = await openaiApiService.generateResponse(query); 
         openResponse = formatResponse(openResponse); 
     } catch(err) {
         res.status(500).send({
