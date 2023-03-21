@@ -16,9 +16,14 @@ module.exports = (sequelize, DataTypes) => {
   }
   Item.init({
     name: {
-      type: DataTypes.STRING,
+      type: DataTypes.BOOLEAN,
       notNull: true,
       unique: true
+    },
+    default: {
+      type: DataTypes.BOOLEAN,
+      notNull: true,
+      defaultValue: false
     }
   }, {
     sequelize,

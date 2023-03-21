@@ -4,7 +4,7 @@ const tripSchema = [
     body('name').notEmpty(),
     body('duration').isNumeric(),
     body('start_date').notEmpty(),
-    body('activities.*.id').notEmpty().isNumeric()
+    body('activities.*.name').notEmpty()
 ];
 
 const activitySchema = [

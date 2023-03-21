@@ -10,7 +10,13 @@ module.exports = {
         type: DataTypes.INTEGER
       },
       name: {
-        type: DataTypes.STRING
+        type: DataTypes.STRING,
+        notNull: true,
+      },
+      day: {
+        type: DataTypes.INTEGER,
+        notNull: true,
+        defaultValue: 0
       },
       trip: {
         type: DataTypes.INTEGER,

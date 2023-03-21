@@ -1,15 +1,15 @@
 const Activity = require('../../models').Activity;
 
 const getActivityById = async (id) => {
-    return await Activity.findByPk(id, {include: ["items"]});
+    return await Activity.findByPk(id, {attributes: ['id', 'name']});
 }
 
 const getActivityByName = async (name) => {
-    return await Activity.findOne({where: {name: name}});
+    return await Activity.findOne({where: {name: name}, attributes: ['id', 'name']});
 }
 
 const getAllActivities = async () => {
-    return await Activity.findAll( {include: ["items"]});
+    return await Activity.findAll({attributes: ['id', 'name']});
 }
 
 const createActivity = async (activity) => {

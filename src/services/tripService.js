@@ -1,7 +1,7 @@
 const Trip = require('../../models').Trip;
 
 const getTripById = (id) => {
-    return Trip.findOne({where: {uuid: id}, include: ["activities", "types", "items",  "itinerary_items"]});
+    return Trip.findOne({where: {uuid: id}, include: ["activities", "items", "itinerary_items"]});
 }
 
 const getAllTrips = () => {

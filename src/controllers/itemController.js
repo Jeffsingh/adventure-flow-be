@@ -1,8 +1,8 @@
 const openaiApiService = require('../services/openaiApiService');
 const itemService = require('../services/itemService');
 
-const getItemById = (req, res) => {
-    itemService.getItemById(req.params.itemId)
+const getItemById = async (req, res) => {
+    return itemService.getItemById(req.params.itemId)
         .then(data => {
             if (data) {
                 res.send(data);
@@ -14,8 +14,7 @@ const getItemById = (req, res) => {
         })
         .catch(err => {
             res.status(500).send({
-                message:
-                    err.message || "Some error occurred while retrieving items."
+                message: err.message || "Some error occurred while retrieving items."
             });
         });
 }
@@ -27,8 +26,7 @@ const getAllItems = (req, res) => {
         })
         .catch(err => {
             res.status(500).send({
-                message:
-                    err.message || "Some error occurred while retrieving items."
+                message: err.message || "Some error occurred while retrieving items."
             });
         });
 }
@@ -40,8 +38,7 @@ const getItemsByActivity = (req, res) => {
         })
         .catch(err => {
             res.status(500).send({
-                message:
-                    err.message || "Some error occurred while retrieving items."
+                message: err.message || "Some error occurred while retrieving items."
             });
         });
 }
@@ -60,8 +57,7 @@ const updateItemById = async (req, res) => {
         }
     } catch (err) {
         res.status(500).send({
-            message:
-                err.message || "Some error occurred while updating item."
+            message: err.message || "Some error occurred while updating item."
         });
     }
 }
@@ -77,8 +73,7 @@ const createItem = (req, res) => {
         })
         .catch(err => {
             res.status(500).send({
-                message:
-                    err.message || "Some error occurred while creating item."
+                message: err.message || "Some error occurred while creating item."
             });
         });
 }
@@ -96,8 +91,7 @@ const deleteItemById = async (req, res) => {
         }
     } catch (err) {
         res.status(500).send({
-            message:
-                err.message || "Some error occurred while removing item."
+            message: err.message || "Some error occurred while removing item."
         });
     }
 }
@@ -107,19 +101,29 @@ const getItemTips = async (req, res) => {
     const activities = req.query.activities instanceof Array ? req.query.activities.join(", ") : req.query.activities;
     const listLength = 10;
     let requestTemplate = "Create a list of items for trip.List length - " + listLength + ",list format - js array."
-    if (location)
-        requestTemplate = requestTemplate + " Location - " + location + ".";
-    if (activities)
-        requestTemplate = requestTemplate + " Activities types - " + activities + ".";
+    if (location) requestTemplate = requestTemplate + " Location - " + location + ".";
+    if (activities) requestTemplate = requestTemplate + " Activities types - " + activities + ".";
 
     try {
         res.status(200).send(await openaiApiService.generateResponse(requestTemplate));
     } catch (err) {
         res.status(500).send({
-            message:
-                err.message || "Some error occurred while requesting openai API"
+            message: err.message || "Some error occurred while requesting openai API"
         });
     }
+}
+
+const getItemsByActivities = async (req, res) => {
+    const activities = req.query.activities instanceof Array ? req.query.activities : [req.query?.activities];
+    await itemService.getItemsByActivities(activities)
+        .then(data => {
+            res.send(data);
+        })
+        .catch(err => {
+            res.status(500).send({
+                message: err.message || "Some error occurred while retrieving items by activities"
+            });
+        });
 }
 
 module.exports = {
@@ -129,5 +133,6 @@ module.exports = {
     updateItemById,
     deleteItemById,
     getItemsByActivity,
-    getItemTips
+    getItemTips,
+    getItemsByActivities
 }

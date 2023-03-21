@@ -129,12 +129,12 @@ const generateData = async () => {
         auth = await authorize();
         const activities = (await getRows(auth, 'A:A')).map(activity => activity[0]);
         const activitiesRequest = "Generate a list of general(not related to the specific place) activities for random country in the world, in js array format";
-        const activitiesResponse = JSON.parse(parseResponseArray(await openaiApiService.generateResponse(activitiesRequest)));
+        const activitiesResponse = JSON.parse(openaiApiService.parseResponseArray(await openaiApiService.generateResponse(activitiesRequest), true));
         for (let activity of activitiesResponse) {
             if (!activities.includes(activity)) {
                 try {
                     const itemsRequest = "Create a list of items for trip with activity - " + activity + ", in js array format";
-                    const itemsResponse = JSON.parse(parseResponseArray(await openaiApiService.generateResponse(itemsRequest)));
+                    const itemsResponse = JSON.parse(openaiApiService.parseResponseArray(await openaiApiService.generateResponse(itemsRequest), true));
                     values.push([activity, itemsResponse.join(";\n")])
                 } catch (err) {
                     console.log("Error to parse items response:" + err);
@@ -153,17 +153,6 @@ const generateData = async () => {
         }
     }
     await generateData();
-}
-
-
-const parseResponseArray = (response) => {
-    response = response.replace(/'/g, '"').toLowerCase();
-    if (response.trim().startsWith('[') && response.indexOf(']', response.length - 1) !== -1) {
-        return response;
-    }
-    let openBrIndex = response.indexOf('[');
-    let closeBrIndex = response.indexOf(']');
-    return response.substring(openBrIndex, closeBrIndex + 1);
 }
 
 const syncData = async (req, res) => {
@@ -187,7 +176,7 @@ const syncData = async (req, res) => {
                         if (await itemService.checkIfExists('name', item.trim())) {
                             _item = await itemService.getItemByName(item.trim());
                         } else {
-                            _item = await itemService.createItem({name: item});
+                            _item = await itemService.createItem({name: item, default: true});
                         }
                         if (_item) {
                             await _activity.addItem(_item);
