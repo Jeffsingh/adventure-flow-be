@@ -5,7 +5,9 @@ const {itemSchema} = require('../validation/schema');
 
 const router = express.Router();
 
-router.get("/:itemId", itemController.getItemById);
+router.get("/item/:itemId", itemController.getItemById);
+
+router.get('/activities', itemController.getItemsByActivities)
 
 router.get("/", itemController.getAllItems);
 
@@ -18,6 +20,7 @@ router.put("/:itemId", itemSchema, validateRequest, itemController.updateItemByI
 router.delete("/:itemId", itemController.deleteItemById);
 
 router.get("/tips/search", itemController.getItemTips);
+
 
 
 module.exports = router;

@@ -1,5 +1,6 @@
 const {Activity} = require("../../models");
 const Item = require('../../models').Item;
+const {Op} = require('sequelize');
 
 const getItemById = (id) => {
     return Item.findByPk(id);
@@ -8,12 +9,32 @@ const getItemById = (id) => {
 const getItemByName = async (name) => {
     return await Item.findOne({where: {name: name}});
 }
+
+
+const getItemsByActivities = async (activitiesList) => {
+    return  Item.findAll({
+        attributes: ['id', 'name'],
+        where:{default: true},
+        include: {
+            model: Activity,
+            as: 'activities',
+            attributes: ['id', 'name'],
+            through: { attributes: [] },
+            where: {
+                name: {
+                    [Op.in]: activitiesList
+                }
+            }
+        }
+    });
+}
+
 const getAllItems = () => {
     return Item.findAll();
 }
 
 const getItemsByActivity = (activityId) => {
-    return Item.findAll({include: [{model: Activity, as:"activities", through: {where: {activity_id: activityId}}}]});
+    return Item.findAll({include: [{model: Activity, as: "activities", through: {where: {activity_id: activityId}}}]});
 }
 
 const createItem = (item) => {
@@ -46,5 +67,6 @@ module.exports = {
     deleteItemById,
     checkIfExists,
     getItemsByActivity,
-    getItemByName
+    getItemByName,
+    getItemsByActivities
 }

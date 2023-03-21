@@ -14,6 +14,11 @@ module.exports = {
         notNull: true,
         unique: true
       },
+      default: {
+        type: DataTypes.BOOLEAN,
+        notNull: true,
+        defaultValue: false
+      },
       createdAt: {
         allowNull: false,
         type: DataTypes.DATE

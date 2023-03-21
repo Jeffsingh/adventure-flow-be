@@ -3,6 +3,7 @@ const activityService = require('../services/activityService');
 const typeService = require('../services/typeService');
 const itemService = require('../services/itemService');
 const userService = require('../services/userService');
+const itineraryItemService = require('../services/itineraryItemService');
 
 const getTripById = (req, res) => {
     tripService.getTripById(req.params.tripId)
@@ -52,14 +53,28 @@ const createTrip = async (req, res) => {
         const newTrip = await tripService.createTrip(trip);
         if (body.activities) {
             for (let activity of body.activities) {
-                const tripActivity = await activityService.getActivityById(activity.id);
+                const tripActivity = await activityService.getActivityByName(activity.name);
                 await newTrip.addActivity(tripActivity);
             }
         }
-        if(body.items){
-            for(let item of body.items){
-                const tripItem = await itemService.getItemById(item.id);
+        if (body.items) {
+            for (let item of body.items) {
+                let tripItem;
+                if (await itemService.checkIfExists('name', item.name)) {
+                    tripItem = await itemService.getItemByName(item.name);
+                } else {
+                    tripItem = await itemService.createItem({name: item.name, default: false});
+                }
                 await newTrip.addItem(tripItem);
+            }
+        }
+        if (body.itineraryItems) {
+            for (let itineraryItem of body.itineraryItems) {
+                await itineraryItemService.createItineraryItem({
+                    name: itineraryItem.name,
+                    day: itineraryItem.day,
+                    trip: newTrip.dataValues.id
+                });
             }
         }
         tripService.getTripById(newTrip.dataValues.uuid).then(data => {

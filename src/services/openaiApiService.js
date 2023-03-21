@@ -27,4 +27,18 @@ const generateResponse = async (request, timeout = 10000) => {
     return result;
 }
 
-module.exports = {generateResponse};
+const parseResponseArray = (response, lowercase) => {
+    response = response.replace(/'/g, '"');
+
+    if(lowercase){
+        response = response.toLowerCase();
+    }
+    if (response.trim().startsWith('[') && response.indexOf(']', response.length - 1) !== -1) {
+        return response;
+    }
+    let openBrIndex = response.indexOf('[');
+    let closeBrIndex = response.indexOf(']');
+    return response.substring(openBrIndex, closeBrIndex + 1);
+}
+
+module.exports = {generateResponse, parseResponseArray};
