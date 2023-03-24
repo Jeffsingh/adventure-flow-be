@@ -87,29 +87,42 @@ const deleteItineraryItemById = async (req, res) => {
     }
 }
 
+const formatResponse = (openResponse) => {
+    openResponse = openResponse.replace(/(?:\r\n|\r|\n)/g, '');
+    openResponse = openResponse.replace(".", " ");
+    openResponse = openResponse.split(',');
+    openResponse = openResponse.filter((item) => item.length > 10);     
+    return openResponse.map((item) => item.trim()); 
+}; 
+
+const formatQuery = (query, listLength, format, location, activities, month) => { 
+    query += "List length - " + listLength + ". "; 
+    query += "List format - " + format + ". ";  
+    query += "Location - " + location + ". "; 
+    query += "Activities types - " + activities + ". ";
+    query += "Time of year - " + month + ".";
+    return query; 
+};; 
+
 const getItineraryItemTips = async (req, res) => {
     const location = req.query.location;
-    const activities = req.query.activities instanceof Array ? req.query.activities.join(", ") : req.query.activities;
-    const date = req.query.startDate;
+    const month = req.query.month || "March"
+    const activities = req.query.activities; 
     const listLength = 10;
-    let requestTemplate = "Create a list of itinerary items for trip.List length - " + listLength + ",list format - js array."
-    if (location)
-        requestTemplate = requestTemplate + " Location - " + location + ".";
-    if (activities)
-        requestTemplate = requestTemplate + " Activities types - " + activities + ".";
-    // if(date)
-    //     requestTemplate = requestTemplate + " Start date - " + date + ".";
-
+    let text = "Create a list of itinerary items for trip. "; 
+    requestTemplate = formatQuery(text, listLength, "comma delimited", location, activities, month);  
     try {
         const response = await openaiApiService.generateResponse(requestTemplate, 15000);
-        res.status(200).send(JSON.parse(openaiApiService.parseResponseArray(response, false)));
+        const formattedResponse = formatResponse(response); 
+        res.status(200).send(formattedResponse);
     } catch (err) {
         res.status(500).send({
             message:
                 err.message || "Some error occurred while requesting openai API"
         });
     }
-}
+} 
+  
 
 module.exports = {
     getItineraryItemById,
