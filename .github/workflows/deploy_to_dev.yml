@@ -13,6 +13,7 @@ jobs:
 
       - name: Install backend dependencies
         run: |
+          ls
           cd adventure-flow-be
           npm install
 
