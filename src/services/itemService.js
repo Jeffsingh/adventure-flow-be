@@ -1,4 +1,4 @@
-const {Activity} = require("../../models");
+const {Activity, Trip} = require("../../models");
 const Item = require('../../models').Item;
 const {Op} = require('sequelize');
 
@@ -59,6 +59,10 @@ const checkIfExists = async (field, value) => {
     })
 }
 
+const getItemsByTrip = (tripId) =>{
+    return Item.findAll({include: [{model: Trip, as: "trips", where: {id: tripId}}]})
+}
+
 module.exports = {
     getItemById,
     getAllItems,
@@ -68,5 +72,6 @@ module.exports = {
     checkIfExists,
     getItemsByActivity,
     getItemByName,
-    getItemsByActivities
+    getItemsByActivities,
+    getItemsByTrip
 }

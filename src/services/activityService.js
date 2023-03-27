@@ -1,4 +1,5 @@
 const Activity = require('../../models').Activity;
+const Trip = require('../../models').Trip;
 
 const getActivityById = async (id) => {
     return await Activity.findByPk(id, {attributes: ['id', 'name']});
@@ -34,6 +35,10 @@ const checkIfExists = async (field, value) => {
     })
 }
 
+const getActivitiesByTrip = async (tripId) => {
+    return Activity.findAll({include: [{model: Trip, as: "trips", where: {id: tripId}}]})
+}
+
 module.exports = {
     getActivityById,
     getAllActivities,
@@ -41,5 +46,6 @@ module.exports = {
     updateActivityById,
     deleteActivityById,
     checkIfExists,
-    getActivityByName
+    getActivityByName,
+    getActivitiesByTrip
 }
