@@ -12,6 +12,7 @@ const dbRoutes = require('./src/routes/dbDataRoutes');
 const sessionRoutes = require('./src/routes/sessionRoutes');
 const cors = require('cors');
 const { sequelize } = require("./models")
+const port = process.env.PORT || 8000;
 
 const app = express();
 security.init();
@@ -39,7 +40,7 @@ app.use('/api/db', dbRoutes);
 app.use('/api/itineraryItems', itineraryItemRoutes);
 
 app.listen(8000, () => {
-    console.log("Start app");
+    console.log("Start app on port " + port);
 });
 
 
