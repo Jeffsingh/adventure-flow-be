@@ -15,6 +15,7 @@ jobs:
         uses: actions/checkout@v2
         with:
           repository: Jeffsingh/adventure-flow-be
+          ref: main
 
       - name: Install backend dependencies
         run: |
@@ -24,6 +25,7 @@ jobs:
         uses: actions/checkout@v2
         with:
           repository: Jeffsingh/adventure-flow-fe
+          ref: main
           path: frontend
 
       - name: Install frontend dependencies
