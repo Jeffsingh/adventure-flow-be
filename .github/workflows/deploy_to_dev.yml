@@ -13,8 +13,6 @@ jobs:
 
       - name: Install backend dependencies
         run: |
-          ls
-          cd adventure-flow-be
           npm install
 
       - name: Checkout frontend repository
@@ -32,7 +30,7 @@ jobs:
         run: |
           cd frontend
           npm run build
-          cd ../adventure-flow-be
+          cd ..
           npm run build
 
       - name: Deploy to Heroku
