@@ -8,7 +8,7 @@
 
 1. Clone git repo `https://github.com/Jeffsingh/adventure-flow-be.git`
 2. Run `npm install command` 
-3. Change db config in `adventure-flow-be/config/config.json`
+3. Add db credentials in .env `DB_USERNAME, DB_PASSWORD, DB_DATABASE, DB_HOST`
 4. Run `npx sequelize db:create` to create database
 5. Run `npx sequelize db:migrate` to add all tables and relations
 6. Run `npx sequelize-cli db:seed:all` to add test data

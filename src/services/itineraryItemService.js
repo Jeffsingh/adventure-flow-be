@@ -1,3 +1,4 @@
+const {Activity} = require("../../models");
 const ItineraryItem = require('../../models').Itinerary_item;
 
 const getItineraryItemById = (id) => {
@@ -34,11 +35,17 @@ const checkIfExists = (id) => {
     })
 }
 
+const getItineraryItemByName = async (name) => {
+    return await ItineraryItem.findOne({where: {name: name}});
+}
+
 module.exports = {
     getItineraryItemById,
     getAllItineraryItems,
     createItineraryItem,
     updateItineraryItemById,
     deleteItineraryItemById,
-    checkIfExists
+    checkIfExists,
+    getAllItineraryItemsByTrip,
+    getItineraryItemByName
 }

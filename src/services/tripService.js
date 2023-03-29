@@ -13,11 +13,11 @@ const createTrip = (trip) => {
 }
 
 const updateTripById = (id, trip) => {
-    return Trip.update(trip, {where: {id}});
+    return Trip.update(trip, {where: {uuid:id}});
 }
 
 const deleteTripById = (id) => {
-    return Trip.destroy({where: {id}});
+    return Trip.destroy({where: {uuid:id}});
 }
 
 const getAllTripsByUserId = (userId) => {
@@ -25,7 +25,7 @@ const getAllTripsByUserId = (userId) => {
 }
 
 const checkIfExists = (id) => {
-    return Trip.count({where: {id: id}}).then(count => {
+    return Trip.count({where: {uuid: id}}).then(count => {
             return count !== 0;
         }
     ).catch(err => {

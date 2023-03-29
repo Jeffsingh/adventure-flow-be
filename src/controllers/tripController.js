@@ -1,6 +1,5 @@
 const tripService = require('../services/tripService')
 const activityService = require('../services/activityService');
-const typeService = require('../services/typeService');
 const itemService = require('../services/itemService');
 const userService = require('../services/userService');
 const itineraryItemService = require('../services/itineraryItemService');
@@ -95,7 +94,72 @@ const updateTripById = async (req, res) => {
         let id = req.params.tripId;
         if (await tripService.checkIfExists(id)) {
             const {body} = req;
-            tripService.updateTripById(id, body);
+            await tripService.updateTripById(id, body);
+            const tripRecord = await tripService.getTripById(id);
+
+            const newActivities = body.activities?.map(activity => activity.name);
+            if (newActivities) {
+                const currentActivities = (await activityService.getActivitiesByTrip(tripRecord.dataValues.id)).map(activity => activity.dataValues.name);
+                for (let _activity of newActivities) {
+                    if (!currentActivities.includes(_activity)) {
+                        const activity = await activityService.getActivityByName(_activity);
+                        await tripRecord.addActivity(activity);
+                    }
+                }
+                for (let _activity of currentActivities) {
+                    if (!newActivities.includes(_activity)) {
+                        const activity = await activityService.getActivityByName(_activity);
+                        await tripRecord.removeActivity(activity);
+                    }
+                }
+            }
+
+            const newItems = body.items?.map(item => item.name);
+            if (newItems) {
+                const currentItems = (await itemService.getItemsByTrip(tripRecord.dataValues.id)).map(item => item.dataValues.name);
+                for (let _item of newItems) {
+                    if (!currentItems.includes(_item)) {
+                        let item;
+                        if(await itemService.checkIfExists('name',_item)){
+                            item = await itemService.getItemByName(_item);
+                        } else {
+                            item = await itemService.createItem({name: _item});
+                        }
+                        await tripRecord.addItem(item);
+                    }
+                }
+                for (let _item of currentItems) {
+                    if (!newItems.includes(_item)) {
+                        const item = await itemService.getItemByName(_item);
+                        await tripRecord.removeItem(item);
+                        if(!item.dataValues.default){
+                           await itemService.deleteItemById(item.dataValues.id);
+                        }
+                    }
+                }
+            }
+
+            const newItineraryItems = body.itinerary_items;
+            if (newItineraryItems) {
+                const currentItineraryItems = (await itineraryItemService.getAllItineraryItemsByTrip(tripRecord.dataValues.id)).map(itineraryItem => itineraryItem.dataValues.name);
+                for (let _itineraryItem of newItineraryItems) {
+                    if (!currentItineraryItems.includes(_itineraryItem.name)) {
+                        await itineraryItemService.createItineraryItem({
+                            name: _itineraryItem.name,
+                            day: _itineraryItem.day,
+                            trip: tripRecord.dataValues.id
+                        });
+                    }
+                }
+                const newItineraryItemsName = newItineraryItems.map(item =>item.name);
+                for (let _itineraryItem of currentItineraryItems) {
+                    if (!newItineraryItemsName.includes(_itineraryItem)) {
+                        const itineraryItem = await itineraryItemService.getItineraryItemByName(_itineraryItem);
+                        await itineraryItemService.deleteItineraryItemById(itineraryItem.dataValues.id);
+                    }
+                }
+            }
+
             res.send(("Trip with id " + id + " successfully updated"));
         } else {
             res.status(302).send({
