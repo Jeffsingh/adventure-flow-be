@@ -16,8 +16,8 @@ const generateResponse = async (request, timeout = 10000) => {
     const apiPromise = openai.createCompletion({
         model: "text-davinci-003",
         prompt: request,
-        max_tokens: 250,
-        temperature: 1,
+        max_tokens: 500,
+        temperature: .7,
     });
  
     const completion = await Promise.race([apiPromise, timeoutPromise]);
