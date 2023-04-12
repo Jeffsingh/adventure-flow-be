@@ -10,8 +10,11 @@ const itemRoutes = require('./src/routes/itemRoutes');
 const itineraryItemRoutes = require('./src/routes/itineraryItemRoutes');
 const dbRoutes = require('./src/routes/dbDataRoutes');
 const sessionRoutes = require('./src/routes/sessionRoutes');
+const path = require("path");
 const cors = require('cors');
-const { sequelize } = require("./models")
+const { sequelize } = require("./models");
+const router = express.Router();
+
 const port = process.env.PORT || 8000;
 
 const app = express();
@@ -25,10 +28,16 @@ app.use(cors({
     origin: 'http://localhost:3000'
 }));
 
+app.get("/", (req, res) => {
+  res.sendFile(path.join(__dirname, "public", "build", "index.html"));
+});
+
+app.use(express.static(path.join(__dirname, "public", "build")));
 
 sequelize.authenticate().then(() => {
     console.log("Database connected");
 })
+
 
 app.use('/api/trips', tripRouter);
 app.use('/api/users', userRoutes);
@@ -39,7 +48,7 @@ app.use('/api/sessions', sessionRoutes);
 app.use('/api/db', dbRoutes);
 app.use('/api/itineraryItems', itineraryItemRoutes);
 
-app.listen(8000, () => {
+app.listen(3000, () => {
     console.log("Start app on port " + port);
 });
 

@@ -46,10 +46,12 @@ const googleOauthHandler = async (req, res) => {
             token = authJwt.generateJwtToken(user);
             message = 'Login successfully';
         }
-
+        //add redirects // error page
         if (!user) {
             return sendResponse.sendErrorResponse(res, 500, 'Server error, failed to authorize Google User', e)
         }
+
+        //add redirects -- welcome page
 
         return sendResponse.sendSuccessResponse(res, 200, {
             user: {
