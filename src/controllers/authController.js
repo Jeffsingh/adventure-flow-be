@@ -1,4 +1,4 @@
-const {getGoogleOauthToken, getGoogleUser, getAuthorizationUri} = require('../security/oauth2/google/service');
+const { getGoogleOauthToken, getGoogleUser, getAuthorizationUri } = require('../security/oauth2/google/service');
 const userService = require('../services/userService');
 const User = require('../../models').User;
 const authJwt = require('../security/authJwt');
@@ -11,9 +11,9 @@ const googleOauthHandler = async (req, res) => {
         if (!code) {
             return sendResponse.sendErrorResponse(res, 401, 'Authorization code not provided!', e)
         }
-        const {id_token, access_token} = await getGoogleOauthToken({code});
+        const { id_token, access_token } = await getGoogleOauthToken({ code });
 
-        const {given_name, family_name, verified_email, email, picture} = await getGoogleUser({
+        const { given_name, family_name, verified_email, email, picture } = await getGoogleUser({
             id_token,
             access_token,
         });
@@ -40,9 +40,9 @@ const googleOauthHandler = async (req, res) => {
             token = authJwt.generateJwtToken(user);
             message = 'Successfully created account';
         } else {
-            console.log(userRecord.id);
-            await userService.updateUser(userRecord.id, user);
-            user = await userService.getUserById(userRecord.id);
+            console.log(userRecord);
+            await userService.updateUser(userRecord.dataValues.uuid, user);
+            user = await userService.getUserById(userRecord.dataValues.uuid);
             token = authJwt.generateJwtToken(user);
             message = 'Login successfully';
         }
@@ -51,15 +51,7 @@ const googleOauthHandler = async (req, res) => {
             return sendResponse.sendErrorResponse(res, 500, 'Server error, failed to authorize Google User', e)
         }
 
-        return sendResponse.sendSuccessResponse(res, 200, {
-            user: {
-                id: user.id,
-                first_name: user.first_name,
-                last_name: user.last_name,
-                email: user.email,
-                accessToken: token
-            }
-        }, message);
+        res.redirect(`/oauth2?token=${token}&userId=${user.uuid}`);
     } catch (err) {
         return sendResponse.sendErrorResponse(res, 500, 'Server error, failed to authorize Google User', err)
     }
@@ -71,4 +63,4 @@ const authorizationPageRedirect = async (req, res) => {
     res.redirect(url);
 }
 
-module.exports = {googleOauthHandler, authorizationPageRedirect};
+module.exports = { googleOauthHandler, authorizationPageRedirect };
