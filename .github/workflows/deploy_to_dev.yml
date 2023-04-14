@@ -1,6 +1,7 @@
 name: Deploy to dev
 on:
   workflow_dispatch:
+
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
@@ -19,6 +20,7 @@ jobs:
 
       - name: Install backend dependencies
         run: |
+          cd adventure-flow-be
           npm install
 
       - name: Checkout frontend repository
@@ -26,25 +28,23 @@ jobs:
         with:
           repository: Jeffsingh/adventure-flow-fe
           ref: main
-          path: frontend
 
       - name: Install frontend dependencies
         run: |
-          cd frontend
+          cd adventure-flow-fe
           npm install
 
       - name: Build the app
         run: |
-          cd frontend
-          npm run build
-          cd ..
-          npm run build
+          cd adventure-flow-fe
+          npm run build --prefix=./build
+          mv build ../adventure-flow-be/public/
 
       - name: Deploy to Heroku
         uses: akhileshns/heroku-deploy@v3.12.12
         with:
           heroku_api_key: e3aa0b81-68cc-4251-aae4-3489d97d196e
-          heroku_app_name: adventureflow
+          heroku_app_name: adventure-flow
           heroku_email: bakay.dmytro@gmail.com
           buildpack: 'heroku/nodejs'
           app_dir: './adventure-flow-be'
