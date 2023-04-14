@@ -51,7 +51,7 @@ const googleOauthHandler = async (req, res) => {
             return sendResponse.sendErrorResponse(res, 500, 'Server error, failed to authorize Google User', e)
         }
 
-        res.redirect(`/oauth2?token=${token}&userId=${user.uuid}`);
+        res.redirect(`/?token=${token}&userId=${user.uuid}`);
     } catch (err) {
         return sendResponse.sendErrorResponse(res, 500, 'Server error, failed to authorize Google User', err)
     }
