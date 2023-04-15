@@ -30,7 +30,6 @@ jobs:
 
       - name: Install frontend dependencies
         run: |
-          cd adventure-flow-fe
           npm install
 
       - name: Build the app
