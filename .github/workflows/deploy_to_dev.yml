@@ -34,7 +34,6 @@ jobs:
 
       - name: Build the app
         run: |
-          cd adventure-flow-fe
           npm run build --prefix=./build
           mv build ../adventure-flow-be/public/
 
