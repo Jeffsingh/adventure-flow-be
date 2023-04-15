@@ -34,7 +34,7 @@ jobs:
 
       - name: Build the app
         run: |
-          npm run build --prefix=./build
+          npm run build
           mv build ../adventure-flow-be/public/
 
       - name: Deploy to Heroku
