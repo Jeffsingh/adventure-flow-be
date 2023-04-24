@@ -12,6 +12,7 @@ module.exports = {
         email: "admin@mail.com",
         password: "jGl25bVBBBW96Qi9Te4V37Fnqchz/Eu4qB9vKrRIqRg=",
         role: "1",
+        imageUrl:"",
         createdAt: new Date(),
         updatedAt: new Date()
       }
