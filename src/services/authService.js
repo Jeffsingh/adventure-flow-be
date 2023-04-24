@@ -18,7 +18,8 @@ const signUp = async (req, res) => {
             last_name,
             email,
             password: hashing.hash(password),
-            role: 1
+            role: 1,
+            imageUrl: '/images/users/default.png'
         });
         let token = authJwt.generateJwtToken(user);
 
