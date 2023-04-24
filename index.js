@@ -20,6 +20,7 @@ const port = process.env.PORT || 8000;
 const app = express();
 security.init();
 
+app.use(express.static('public'))
 app.use(bodyParser.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser())
@@ -45,9 +46,9 @@ app.use('/api/db', dbRoutes);
 app.use('/api/itineraryItems', itineraryItemRoutes);
 
 app.get("/*", (req, res) => {
-    if (!req.originalUrl.startsWith("/api")) {
-        res.sendFile(path.join(__dirname, "public", "build", "index.html"));
-    }
+        if (!req.originalUrl.startsWith("/api") && !req.originalUrl.startsWith("/images")) {
+            res.sendFile(path.join(__dirname, "public", "build", "index.html"));
+        }
 });
 
 app.listen(port, () => {

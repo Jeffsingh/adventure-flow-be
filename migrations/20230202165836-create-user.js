@@ -29,6 +29,10 @@ module.exports = {
       password: {
         type: DataTypes.STRING
       },
+      imageUrl: {
+        type: DataTypes.STRING,
+        allowNull: true
+      },
       role: {
         type: DataTypes.INTEGER,
         references: {
